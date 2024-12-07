@@ -49,8 +49,39 @@ def inventory():
 
 @app.route("/delete_item/<int:inventory_id>", methods=["POST"])
 def delete_item(inventory_id):
-    execute_query("DELETE FROM inventory WHERE inventory_id = ?", (inventory_id,))
+    user_id = 1  # Replace with the logged-in user ID
+    execute_query("DELETE FROM inventory WHERE inventory_id = ? AND user_id = ?", (inventory_id, user_id))
     return redirect(url_for("inventory"))
+
+
+@app.route("/edit_inventory_item/<int:inventory_id>", methods=["GET", "POST"])
+def edit_inventory_item(inventory_id):
+    user_id = 1  # Replace with the actual logged-in user ID
+
+    if request.method == "POST":
+        # Retrieve the updated quantity
+        quantity = int(request.form["quantity"])
+
+        # Update the quantity in the inventory
+        execute_query("""
+            UPDATE inventory
+            SET quantity = ?
+            WHERE inventory_id = ? AND user_id = ?
+        """, (quantity, inventory_id, user_id))
+
+        return redirect(url_for("inventory"))
+
+    # Fetch the inventory item to edit
+    item = execute_query("""
+        SELECT * FROM inventory WHERE inventory_id = ? AND user_id = ?
+    """, (inventory_id, user_id))
+
+    if not item:
+        return "Item not found or access denied.", 404
+
+    item = item[0]  # Since the result is a list, we need the first element
+    return render_template("edit_inventory_item.html", item=item)
+
 
 @app.route("/recipes", methods=["GET", "POST"])
 def recipes():
@@ -138,14 +169,20 @@ def filter_recipes():
 
 
 
-
-
-
 @app.route("/delete_recipe/<int:recipe_id>", methods=["POST"])
 def delete_recipe(recipe_id):
     execute_query("DELETE FROM recipes WHERE recipe_id = ?", (recipe_id,))
     execute_query("DELETE FROM recipe_ingredients WHERE recipe_id = ?", (recipe_id,))
     return redirect(url_for("recipes"))
+
+
+
+@app.route("/all_recipes", methods=["GET"])
+def all_recipes():
+    # Fetch all recipes from the database
+    recipes = execute_query("SELECT * FROM recipes")
+    return render_template("all_recipes.html", recipes=recipes)
+
 
 #----------------------------------------suplier_products----------------------------------------------
 @app.route("/supplier_products", methods=["GET", "POST"])
@@ -176,7 +213,66 @@ def supplier_products():
     products = execute_query("SELECT * FROM supplier_products WHERE supplier_id = ?", (user_id,))
     return render_template("supplier_products.html", products=products)
 
+#-------------------Edit supplied products-------------------------------
+@app.route("/edit_supplier_product/<int:product_id>", methods=["GET", "POST"])
+def edit_supplier_product(product_id):
+    user_role = "Supplier"
+    user_id = 1  # Replace with logged-in supplier's user_id
+
+    if user_role != "Supplier":
+        return "Access denied. Only suppliers can access this page.", 403
+
+    if request.method == "POST":
+        # Retrieve updated data from the form
+        price = float(request.form["price"])
+        quantity = int(request.form["quantity"])
+
+        # Update the product in the supplier_products table
+        execute_query("""
+            UPDATE supplier_products
+            SET price = ?, quantity = ?
+            WHERE id = ? AND supplier_id = ?
+        """, (price, quantity, product_id, user_id))
+
+        return redirect(url_for("supplier_products"))
+
+    # Fetch the product to edit
+    product = execute_query("""
+        SELECT * FROM supplier_products WHERE id = ? AND supplier_id = ?
+    """, (product_id, user_id))
+
+    if not product:
+        return "Product not found or access denied.", 404
+
+    product = product[0]  # Since the result is a list, we need the first element
+    return render_template("edit_supplier_product.html", product=product)
+
+
+
 #---------------------------------------------------------------------------------------------------------
+
+#---------------suplied_products----------------------
+@app.route("/supplied_products", methods=["GET"])
+def supplied_products():
+    # Fetch all supplied products with supplier details
+    products = execute_query("""
+            SELECT 
+                supplier_products.id AS product_id,
+                supplier_products.product_name,
+                supplier_products.category,
+                supplier_products.price,
+                supplier_products.quantity,
+                supplier_products.date_added,
+                users.username AS supplier_name,
+                users.email AS supplier_contact
+            FROM supplier_products
+            JOIN users ON supplier_products.supplier_id = users.user_id
+        """)
+
+
+    return render_template("supplied_products.html", products=products)
+
+
 
 #---init database here---
 

@@ -9,7 +9,7 @@
     <h1>Supplier Products</h1>
     
     <!-- Form to add new product -->
-    <form method="POST">
+    <form method="POST" action="/add_product">
         <label for="product_name">Product Name:</label>
         <input type="text" id="product_name" name="product_name" required><br>
 
@@ -35,18 +35,37 @@
             <th>Price</th>
             <th>Quantity</th>
             <th>Date Added</th>
+            <th>Actions</th>
         </tr>
         {% for product in products %}
         <tr>
-            <td>{{ product[0] }}</td> <!-- Product ID -->
-            <td>{{ product[2] }}</td> <!-- Product Name -->
-            <td>{{ product[3] }}</td> <!-- Category -->
-            <td>{{ product[4] }}</td> <!-- Price -->
-            <td>{{ product[5] }}</td> <!-- Quantity -->
-            <td>{{ product[6] }}</td> <!-- Date Added -->
+            <td>{{ product.id }}</td>
+            <td>{{ product.product_name }}</td>
+            <td>{{ product.category }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.date_added }}</td>
+            <td>
+                <form method="GET" action="{{ url_for('edit_supplier_product', product_id=product.id) }}" style="display:inline;">
+                    <button type="submit">Edit</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </table>
     
+
+    <!-- Edit product form (conditionally displayed) -->
+    {% if edit_product %}
+    <h2>Edit Product</h2>
+    <form method="POST" action="/update_product">
+        <input type="hidden" name="product_id" value="{{ edit_product[0] }}">
+        <label for="edit_price">Price:</label>
+        <input type="number" id="edit_price" name="price" step="0.01" value="{{ edit_product[4] }}" required><br>
+        <label for="edit_quantity">Quantity:</label>
+        <input type="number" id="edit_quantity" name="quantity" value="{{ edit_product[5] }}" required><br>
+        <button type="submit">Update Product</button>
+    </form>
+    {% endif %}
 </body>
 </html>

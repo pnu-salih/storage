@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <style>
+        th {
+            cursor: pointer;
+        }
+    </style>
+
 </head>
 <body>
     <header>
@@ -15,7 +22,6 @@
             <a href="/recipes">Recipes</a>
             <a href="{{ url_for('filter_recipes') }}">Check Recipes You Can Make</a>
             <a href="{{ url_for('supplier_products') }}">Supplier Products</a>
-
         </nav>
     </header>
 
@@ -42,13 +48,13 @@
         <section>
             <h2>Inventory List</h2>
             {% if items %}
-            <table>
+            <table id="inventoryTable">
                 <thead>
                     <tr>
-                        <th>Item Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                        <th>Expiration Date</th>
+                        <th onclick="sortTable(0)">Item Name</th>
+                        <th onclick="sortTable(1)">Category</th>
+                        <th onclick="sortTable(2)">Quantity</th>
+                        <th onclick="sortTable(3)">Expiration Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -60,6 +66,9 @@
                         <td>{{ item[4] }}</td>
                         <td>{{ item[5] }}</td>
                         <td>
+                            <form action="{{ url_for('edit_inventory_item', inventory_id=item[0]) }}" method="GET" style="display:inline;">
+                                <button type="submit">Edit Quantity</button>
+                            </form>
                             <form action="/delete_item/{{ item[0] }}" method="POST" style="display:inline;">
                                 <button type="submit">Delete</button>
                             </form>
@@ -77,5 +86,41 @@
     <footer>
         <p>&copy; 2024 Inventory Management System</p>
     </footer>
+
+    <script>
+        // JavaScript function to sort the table by column index
+        let sortDirection = [true, true, true, true]; // tracks the sort direction for each column
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById("inventoryTable");
+            const rows = Array.from(table.rows).slice(1); // Get all rows except the header
+            const isAscending = sortDirection[columnIndex];
+
+            // Sort the rows based on the column
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.cells[columnIndex].innerText;
+                const cellB = rowB.cells[columnIndex].innerText;
+
+                let comparison = 0;
+
+                // Compare based on column type
+                if (columnIndex === 2) { // Quantity column (numeric)
+                    comparison = parseInt(cellA) - parseInt(cellB);
+                } else if (columnIndex === 3) { // Expiration Date column (date)
+                    comparison = new Date(cellA) - new Date(cellB);
+                } else { // For Item Name and Category (strings)
+                    comparison = cellA.localeCompare(cellB);
+                }
+
+                return isAscending ? comparison : -comparison;
+            });
+
+            // Append sorted rows back to the table body
+            rows.forEach(row => table.appendChild(row));
+
+            // Toggle the sorting direction for the next click
+            sortDirection[columnIndex] = !isAscending;
+        }
+    </script>
 </body>
 </html>

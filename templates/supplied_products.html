@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplied Products</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+            cursor: pointer;
+        }
+        th.sorted-asc::after {
+            content: " ↑";
+        }
+        th.sorted-desc::after {
+            content: " ↓";
+        }
+    </style>
+</head>
+<body>
+    <h1>Supplied Products</h1>
+    <input type="text" id="searchInput" placeholder="Search by Product Name..." onkeyup="searchTable()" />
+
+
+    <table id="productsTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">Supplier Name</th>
+                <th onclick="sortTable(1)">Supplier Contact</th>
+                <th onclick="sortTable(2)">Product Name</th>
+                <th onclick="sortTable(3)">Category</th>
+                <th onclick="sortTable(4)">Price</th>
+                <th onclick="sortTable(5)">Quantity</th>
+                <th onclick="sortTable(6)">Date Added</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product['supplier_name'] }}</td>
+                <td>{{ product['supplier_contact'] }}</td>
+                <td>{{ product['product_name'] }}</td>
+                <td>{{ product['category'] }}</td>
+                <td>${{ product['price'] }}</td>
+                <td>{{ product['quantity'] }}</td>
+                <td>{{ product['date_added'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>        
+    </table>
+
+    <script>
+
+        let sortDirection = [true, true, true, true, true, true, true]; // Track sort direction for each column (true = ascending)
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById("productsTable");
+            const rows = Array.from(table.rows).slice(1); // Skip the header row
+            const isAscending = sortDirection[columnIndex];
+
+            rows.sort((a, b) => {
+                let cellA = a.cells[columnIndex].innerText.trim();
+                let cellB = b.cells[columnIndex].innerText.trim();
+
+                // Handle specific column types
+                if (columnIndex === 4) { // Price column (numeric)
+                    cellA = parseFloat(cellA.replace('$', '')) || 0; // Remove "$" and convert to number
+                    cellB = parseFloat(cellB.replace('$', '')) || 0;
+                } else if (columnIndex === 3) { // Category column (text)
+                    cellA = cellA.toLowerCase(); // Case-insensitive comparison
+                    cellB = cellB.toLowerCase();
+                } else if (columnIndex === 5) { // Quantity column (numeric)
+                    cellA = parseInt(cellA, 10) || 0; // Convert to integer
+                    cellB = parseInt(cellB, 10) || 0;
+                }
+
+                // Generic sorting logic
+                let comparison = cellA < cellB ? -1 : cellA > cellB ? 1 : 0;
+                return isAscending ? comparison : -comparison;
+            });
+
+            // Append sorted rows back to the table body
+            const tableBody = table.querySelector("tbody");
+            rows.forEach(row => tableBody.appendChild(row));
+
+            // Toggle sort direction
+            sortDirection[columnIndex] = !isAscending;
+
+            // Update sort indicators
+            updateSortArrows(columnIndex);
+        }
+
+        function updateSortArrows(columnIndex) {
+            const headers = document.querySelectorAll("th");
+            headers.forEach((header, index) => {
+                header.classList.remove("sorted-asc", "sorted-desc"); // Clear existing indicators
+                if (index === columnIndex) {
+                    header.classList.add(sortDirection[columnIndex] ? "sorted-asc" : "sorted-desc");
+                }
+            });
+        }
+
+
+
+        function searchTable() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const table = document.getElementById("productsTable");
+            const rows = table.querySelectorAll("tbody tr");
+
+            rows.forEach(row => {
+                const productName = row.cells[2].innerText.toLowerCase(); // Get the Product Name cell
+                if (productName.includes(input)) {
+                    row.style.display = ""; // Show the row if it matches the search
+                } else {
+                    row.style.display = "none"; // Hide the row if it doesn't match
+                }
+            });
+        }
+    </script>
+</body>
+</html>
