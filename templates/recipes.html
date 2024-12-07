@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+</head>
+<body>
+    <header>
+        <h1>Recipes</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/inventory">Inventory</a>
+            <a href="/recipes">Recipes</a>
+            <a href="{{ url_for('filter_recipes') }}">Check Recipes You Can Make</a>
+            <a href="{{ url_for('supplier_products') }}">Supplier Products</a>
+
+        </nav>
+    </header>
+
+    <!-- Recipe Form -->
+    <form method="POST" action="{{ url_for('recipes') }}">
+        <!-- Recipe Details -->
+        <label for="recipe_name">Recipe Name:</label>
+        <input type="text" id="recipe_name" name="recipe_name" required><br>
+
+        <label for="cuisine">Cuisine:</label>
+        <input type="text" id="cuisine" name="cuisine" required><br>
+
+        <label for="diet_type">Diet Type:</label>
+        <select id="diet_type" name="diet_type" required>
+            <option value="Vegan">Vegan</option>
+            <option value="Vegetarian">Vegetarian</option>
+            <option value="Gluten-Free">Gluten-Free</option>
+            <option value="Non-Vegetarian">Non-Vegetarian</option>
+        </select><br>
+
+        <label for="instructions">Instructions:</label><br>
+        <textarea id="instructions" name="instructions" rows="4" required></textarea><br>
+
+        <!-- Supplier Products -->
+        <label for="selected_products">Select Ingredients (from Supplier Products):</label><br>
+        <div id="supplier-products">
+            {% for product in supplier_products %}
+                <div>
+                    <input 
+                        type="checkbox" 
+                        id="product_{{ product[0] }}" 
+                        name="selected_products[]" 
+                        value="{{ product[0] }}" 
+                        onchange="toggleQuantityInput('{{ product[0] }}')"
+                    >
+                    <label for="product_{{ product[0] }}">{{ product[0] }}</label>
+                    <input 
+                        type="number" 
+                        id="quantity_{{ product[0] }}" 
+                        name="quantities[{{ product[0] }}]" 
+                        placeholder="Quantity" 
+                        style="display: none;" 
+                        min="1"
+                    >
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+
+
+        <!-- Custom Ingredients -->
+        <label for="custom_ingredients">Add Custom Ingredients (Format: "ingredient_name:quantity"):</label><br>
+        <div id="custom-ingredients-container">
+            <input type="text" name="custom_ingredients" placeholder="e.g. flour:2 cups">
+        </div>
+        <button type="button" onclick="addCustomIngredient()">Add Another Ingredient</button><br><br>
+
+        <button type="submit">Save Recipe</button>
+    </form>
+
+    <script>
+        function addCustomIngredient() {
+            const container = document.getElementById("custom-ingredients-container");
+            const input = document.createElement("input");
+            input.type = "text";
+            input.name = "custom_ingredients";
+            input.placeholder = "e.g. ingredient_name:quantity";
+            container.appendChild(input);
+        }
+
+        function toggleQuantityInput(productName) {
+            const quantityInput = document.getElementById(`quantity_${productName}`);
+            const checkbox = document.getElementById(`product_${productName}`);
+            quantityInput.style.display = checkbox.checked ? "block" : "none";
+        }
+
+
+    </script>
+</body>
+</html>
