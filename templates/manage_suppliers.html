@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Suppliers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Manage Suppliers</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Supplier Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Date Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for supplier in suppliers %}
+                <tr>
+                    <td>{{ supplier.user_id }}</td>
+                    <td>{{ supplier.username }}</td>
+                    <td>{{ supplier.email }}</td>
+                    <td>{{ supplier.role }}</td>
+                    <td>{{ supplier.date_created }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('remove_supplier', supplier_id=supplier.user_id) }}" 
+                              style="display:inline;" onsubmit="return confirm('Are you sure you want to remove this supplier?')">
+                            <button type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('admin') }}">Back to Admin Dashboard</a>
+    </div>
+</body>
+</html>

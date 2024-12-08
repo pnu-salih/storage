@@ -1,6 +1,52 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 style="display: block;margin: auto;">Welcome to the Food Storage Management System</h1>
-<p>Manage your inventory, explore recipes, and reduce food waste.</p>
+<!-- Hero Section -->
+<section style="background: #2d3a3f; color: #fff; padding: 50px 0; text-align: center;">
+    <h1 style="font-size: 3em; font-weight: 700; margin: 2%;">Welcome to the Food Storage & Recipe Management System</h1>
+    <p style="font-size: 1.2em; margin: 20px auto; max-width: 800px;">Our system is designed to help households and small businesses efficiently manage their food inventory, reduce food waste, and explore delicious recipes based on available ingredients and dietary preferences. Take control of your food and waste today!</p>
+</section>
+
+<!-- Introduction Section -->
+<section style="background: #f7f7f7; padding: 40px 0;">
+    <div style="text-align: center;">
+        <h2 style="font-size: 2.5em; color: #333;">What We Do</h2>
+        <p style="font-size: 1.2em; max-width: 800px; margin: 20px auto;">Our Food Storage & Recipe Management System is an innovative tool for individuals and small businesses alike. We offer a comprehensive platform to track inventory, manage expiration dates, discover recipes, and reduce food waste—all while supporting health and dietary goals.</p>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section style="background: #ffffff; padding: 60px 0;">
+    <div style="display: flex; justify-content: space-around; max-width: 1200px; margin: auto;">
+        <div style="width: 30%; text-align: center;">
+            <h3 style="color: #2d3a3f; font-size: 2em;">Inventory Management</h3>
+            <p style="font-size: 1.1em;">Track the freshness of your ingredients, manage quantities, and get notified when items are close to expiring. Perfect for both individuals and small businesses!</p>
+        </div>
+        <div style="width: 30%; text-align: center;">
+            <h3 style="color: #2d3a3f; font-size: 2em;">Recipe Recommendations</h3>
+            <p style="font-size: 1.1em;">Discover delicious recipes based on your available ingredients, dietary needs, and personal preferences. Healthier eating, made easy.</p>
+        </div>
+        <div style="width: 30%; text-align: center;">
+            <h3 style="color: #2d3a3f; font-size: 2em;">Waste Reduction</h3>
+            <p style="font-size: 1.1em;">Track food waste and optimize your inventory management to reduce unnecessary waste. Save money, time, and the environment.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Database & System Info Section -->
+<section style="background: #eef2f3; padding: 60px 0;">
+    <div style="text-align: center;">
+        <h2 style="font-size: 2.5em; color: #333;">How It Works</h2>
+        <p style="font-size: 1.1em; max-width: 800px; margin: 20px auto;">The system is powered by a relational database consisting of multiple tables, allowing seamless interaction between inventory, recipes, user preferences, suppliers, and waste tracking. Each table is interrelated, ensuring the data flows efficiently to create an intelligent and personalized experience for all users.</p>
+    </div>
+</section>
+
+<!-- Call-to-Action Section -->
+<section style="background: #2d3a3f; color: #fff; padding: 40px 0;">
+    <div style="text-align: center;">
+        <h2 style="font-size: 2.5em;">Ready to Get Started?</h2>
+        <p style="font-size: 1.2em; margin: 20px auto; max-width: 800px;">Join our system today and take control of your food inventory, reduce waste, and discover recipes tailored to your preferences. It’s time to make your food smarter.</p>
+        <a href="/signup" style="background: #4CAF50; color: #fff; padding: 15px 30px; text-decoration: none; font-size: 1.1em; border-radius: 5px; margin-top: 20px;">Sign Up Now</a>
+    </div>
+</section>
 {% endblock %}

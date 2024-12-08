@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="admin-container">
+        <h1>System Settings</h1>
+        <form action="{{ url_for('settings') }}" method="POST">
+            <label for="notifications">Enable Notifications</label>
+            <input type="checkbox" id="notifications" name="notifications" {% if settings.notifications %} checked {% endif %}>
+            
+            <label for="data_policy">Data Policy</label>
+            <textarea id="data_policy" name="data_policy">{{ settings.data_policy }}</textarea>
+            
+            <button type="submit">Save Settings</button>
+        </form>
+        <a href="{{ url_for('admin') }}">Back to Admin Dashboard</a>
+    </div>
+</body>
+</html>

@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available Recipes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding: 20px;
             background-color: #f4f4f4;
         }
 
@@ -35,7 +36,19 @@
     </style>
 </head>
 <body>
+    <header>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('inventory') }}">Inventory</a>
+            <a href="{{ url_for('recipes') }}">Create Recipes</a>
+            <a href="{{ url_for('all_recipes') }}">Recipes</a>
+            <a href="{{ url_for('supplier_products') }}">Supplier Products</a>
+            <a href="{{ url_for('supplied_products') }}">Supplied Products</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
     <h1>Recipes You Can Make</h1>
+    
 
     <a href="{{ url_for('all_recipes') }}" class="btn">View All Recipes</a>
 

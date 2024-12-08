@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Shopping List</h1>
+
+        <table class="table table-bordered mt-4">
+            <thead>
+                <tr>
+                    <th>Ingredient Name</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in shopping_list %}
+                <tr>
+                    <td>{{ item.ingredient_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>
+                        <!-- Add Delete Button -->
+                        <form action="{{ url_for('delete_shopping_item', item_id=item.item_id) }}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">No items in the shopping list.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('all_recipes') }}" class="btn btn-primary mt-4">Back to Recipes</a>
+    </div>
+</body>
+</html>

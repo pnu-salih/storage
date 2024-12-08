@@ -3,32 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
     <title>Supplied Products</title>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 18px;
-            text-align: left;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f4f4f4;
-            cursor: pointer;
-        }
-        th.sorted-asc::after {
-            content: " ↑";
-        }
-        th.sorted-desc::after {
-            content: " ↓";
-        }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 16px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f4f4f4; cursor: pointer; }
+        th.sorted-asc::after { content: " ↑"; }
+        th.sorted-desc::after { content: " ↓"; }
+        input[type="text"] { padding: 8px; margin-bottom: 20px; width: 100%; max-width: 300px; }
+        a { text-decoration: none; color: #333; padding: 10px; }
+        header { background-color: #333; padding: 10px 0; }
+        nav a { margin: 0 10px; color: white; }
+
     </style>
 </head>
 <body>
+    <header>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('inventory') }}">Inventory</a>
+            <a href="{{ url_for('recipes') }}">Create Recipes</a>
+            <a href="{{ url_for('all_recipes') }}">Recipes</a>
+            <a href="{{ url_for('supplier_products') }}">Supplier Products</a>
+            <a href="{{ url_for('supplied_products') }}">Supplied Products</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
     <h1>Supplied Products</h1>
     <input type="text" id="searchInput" placeholder="Search by Product Name..." onkeyup="searchTable()" />
 

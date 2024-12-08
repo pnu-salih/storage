@@ -5,95 +5,231 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipes</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+        header {
+            background-color: #343a40;
+            padding: 10px 0;
+        }
+        header nav {
+            display: flex;
+            justify-content: center;
+        }
+        header nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        header nav a:hover {
+            background-color: #007bff;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #343a40;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button.btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        button.btn-primary:hover {
+            background-color: #0056b3;
+        }
+        button.btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        button.btn-danger:hover {
+            background-color: #c82333;
+        }
+        .table {
+            margin-top: 30px;
+        }
+        .table th, .table td {
+            padding: 12px;
+            text-align: center;
+        }
+        .table-bordered {
+            border: 1px solid #ddd;
+        }
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #ddd;
+        }
+        img {
+            width: 100px;
+            height: auto;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Recipes</h1>
         <nav>
-            <a href="/">Home</a>
-            <a href="/inventory">Inventory</a>
-            <a href="/recipes">Recipes</a>
-            <a href="{{ url_for('filter_recipes') }}">Check Recipes You Can Make</a>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('inventory') }}">Inventory</a>
+            <a href="{{ url_for('recipes') }}">Create Recipes</a>
+            <a href="{{ url_for('all_recipes') }}">Recipes</a>
             <a href="{{ url_for('supplier_products') }}">Supplier Products</a>
-
+            <a href="{{ url_for('supplied_products') }}">Supplied Products</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
         </nav>
     </header>
 
-    <!-- Recipe Form -->
-    <form method="POST" action="{{ url_for('recipes') }}">
-        <!-- Recipe Details -->
-        <label for="recipe_name">Recipe Name:</label>
-        <input type="text" id="recipe_name" name="recipe_name" required><br>
+    <div class="container">
+        <h1>Recipes</h1>
+        <form method="POST" action="{{ url_for('recipes') }}" enctype="multipart/form-data">
+            <label for="recipe_name">Recipe Name:</label>
+            <input type="text" id="recipe_name" name="recipe_name" required><br>
 
-        <label for="cuisine">Cuisine:</label>
-        <input type="text" id="cuisine" name="cuisine" required><br>
+            <label for="cuisine">Cuisine:</label>
+            <input type="text" id="cuisine" name="cuisine" required><br>
 
-        <label for="diet_type">Diet Type:</label>
-        <select id="diet_type" name="diet_type" required>
-            <option value="Vegan">Vegan</option>
-            <option value="Vegetarian">Vegetarian</option>
-            <option value="Gluten-Free">Gluten-Free</option>
-            <option value="Non-Vegetarian">Non-Vegetarian</option>
-        </select><br>
+            <label for="diet_type">Diet Type:</label>
+            <select id="diet_type" name="diet_type" required>
+                <option value="Vegan">Vegan</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Gluten-Free">Gluten-Free</option>
+                <option value="Non-Vegetarian">Non-Vegetarian</option>
+            </select><br>
 
-        <label for="instructions">Instructions:</label><br>
-        <textarea id="instructions" name="instructions" rows="4" required></textarea><br>
+            <label for="instructions">Instructions:</label><br>
+            <textarea id="instructions" name="instructions" rows="4" required></textarea><br>
 
-        <!-- Supplier Products -->
-        <label for="selected_products">Select Ingredients (from Supplier Products):</label><br>
-        <div id="supplier-products">
-            {% for product in supplier_products %}
-                <div>
-                    <input 
-                        type="checkbox" 
-                        id="product_{{ product[0] }}" 
-                        name="selected_products[]" 
-                        value="{{ product[0] }}" 
-                        onchange="toggleQuantityInput('{{ product[0] }}')"
-                    >
-                    <label for="product_{{ product[0] }}">{{ product[0] }}</label>
-                    <input 
-                        type="number" 
-                        id="quantity_{{ product[0] }}" 
-                        name="quantities[{{ product[0] }}]" 
-                        placeholder="Quantity" 
-                        style="display: none;" 
-                        min="1"
-                    >
-                </div>
-            {% endfor %}
-        </div>
-        <br>
+            <label for="recipe_image">Recipe Image:</label>
+            <input type="file" id="recipe_image" name="recipe_image" accept="image/*"><br><br>
 
+            <label for="ingredient-search">Search Ingredients:</label>
+            <input type="text" id="ingredient-search" list="search-options" placeholder="Type to search..." autocomplete="off">
+            <datalist id="search-options"></datalist>
+            
+            <div id="supplier-products-container"></div>
 
-        <!-- Custom Ingredients -->
-        <label for="custom_ingredients">Add Custom Ingredients (Format: "ingredient_name:quantity"):</label><br>
-        <div id="custom-ingredients-container">
-            <input type="text" name="custom_ingredients" placeholder="e.g. flour:2 cups">
-        </div>
-        <button type="button" onclick="addCustomIngredient()">Add Another Ingredient</button><br><br>
+            <label for="custom_ingredients">Add Custom Ingredients:</label><br>
+            <div id="custom-ingredients-container">
+                <input type="text" name="custom_ingredients" placeholder="e.g. flour:2 cups">
+            </div>
+            <button type="button" onclick="addCustomIngredient()">Add Another Ingredient</button><br><br>
 
-        <button type="submit">Save Recipe</button>
-    </form>
+            <button type="submit" class="btn btn-primary">Save Recipe</button>
+        </form>
+
+        <h2 class="mt-5">My Recipes</h2>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Recipe Name</th>
+                    <th>Cuisine</th>
+                    <th>Diet Type</th>
+                    <th>Ingredients</th>
+                    <th>Ingredients Count</th>
+                    <th>Instructions</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for recipe in user_recipes %}
+                <tr>
+                    <td>{{ recipe.recipe_name }}</td>
+                    <td>{{ recipe.cuisine }}</td>
+                    <td>{{ recipe.diet_type }}</td>
+                    <td>{{ recipe.ingredients }}</td>
+                    <td>{{ recipe.ingredients_count }}</td>
+                    <td>{{ recipe.instructions }}</td>
+                    <td>
+                        {% if recipe.image_name %}
+                            <img src="{{ url_for('static', filename='upload/' + recipe.image_name) }}" alt="{{ recipe.recipe_name }}" style="width: 100px; height: auto;">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form action="{{ url_for('delete_recipe', recipe_id=recipe.recipe_id) }}" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                        <a href="{{ url_for('edit_recipe', recipe_id=recipe.recipe_id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center">No recipes found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <script>
         function addCustomIngredient() {
-            const container = document.getElementById("custom-ingredients-container");
-            const input = document.createElement("input");
-            input.type = "text";
-            input.name = "custom_ingredients";
-            input.placeholder = "e.g. ingredient_name:quantity";
+            const container = document.getElementById('custom-ingredients-container');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'custom_ingredients';
+            input.placeholder = 'e.g. flour:2 cups';
             container.appendChild(input);
         }
 
-        function toggleQuantityInput(productName) {
-            const quantityInput = document.getElementById(`quantity_${productName}`);
-            const checkbox = document.getElementById(`product_${productName}`);
-            quantityInput.style.display = checkbox.checked ? "block" : "none";
-        }
+        const searchInput = document.getElementById('ingredient-search');
+        const dataList = document.getElementById('search-options');
 
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim();
 
+            if (query.length === 0) {
+                dataList.innerHTML = '';
+                return;
+            }
+
+            fetch(`/search_ingredients?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(suggestions => {
+                    dataList.innerHTML = '';
+                    suggestions.forEach(suggestion => {
+                        const option = document.createElement('option');
+                        option.value = suggestion;
+                        dataList.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching ingredients:', error));
+        });
     </script>
 </body>
 </html>

@@ -7,27 +7,125 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
     <style>
-        th {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        main {
+            padding: 2rem;
+        }
+
+        section {
+            margin-bottom: 2rem;
+        }
+
+        form {
+            display: grid;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"] {
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 0.7rem;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        table th, table td {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        footer {
+            text-align: center;
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 
 </head>
 <body>
     <header>
-        <h1>Inventory Management</h1>
         <nav>
-            <a href="/">Home</a>
-            <a href="/inventory">Inventory</a>
-            <a href="/recipes">Recipes</a>
-            <a href="{{ url_for('filter_recipes') }}">Check Recipes You Can Make</a>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('inventory') }}">Inventory</a>
+            <a href="{{ url_for('recipes') }}">Create Recipes</a>
+            <a href="{{ url_for('all_recipes') }}">Recipes</a>
             <a href="{{ url_for('supplier_products') }}">Supplier Products</a>
+            <a href="{{ url_for('supplied_products') }}">Supplied Products</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
         </nav>
     </header>
+    <h1>Inventory Management</h1>
 
     <main>
         <section>
-            <h2>Add New Inventory Item</h2>
             <form method="POST" action="/inventory">
                 <label for="item_name">Item Name:</label>
                 <input type="text" id="item_name" name="item_name" required>
@@ -82,10 +180,6 @@
             {% endif %}
         </section>
     </main>
-
-    <footer>
-        <p>&copy; 2024 Inventory Management System</p>
-    </footer>
 
     <script>
         // JavaScript function to sort the table by column index

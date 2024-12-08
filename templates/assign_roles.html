@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Roles</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Assign Roles</h1>
+
+        <!-- Display success/error messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Users table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Current Role</th>
+                    <th>Assign New Role</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user['user_id'] }}</td>
+                    <td>{{ user['username'] }}</td>
+                    <td>{{ user['email'] }}</td>
+                    <td>{{ user['role'] }}</td>
+                    <td>
+                        <form action="{{ url_for('assign_roles') }}" method="POST" style="display: inline;">
+                            <input type="hidden" name="user_id" value="{{ user['user_id'] }}">
+                            <select name="role" required>
+                                <option value="user" {% if user['role'] == 'user' %}selected{% endif %}>User</option>
+                                <option value="admin" {% if user['role'] == 'admin' %}selected{% endif %}>Admin</option>
+                                <option value="supplier" {% if user['role'] == 'supplier' %}selected{% endif %}>Supplier</option>
+                                <option value="recipe_curator" {% if user['role'] == 'recipe_curator' %}selected{% endif %}>Recipe Curator</option>
+                            </select>
+                            <button type="submit">Update Role</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('admin') }}">Back to Admin Dashboard</a>
+    </div>
+</body>
+</html>

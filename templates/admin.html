@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 20px; }
+        .admin-container { width: 80%; margin: 0 auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        section { margin-bottom: 20px; }
+        a { text-decoration: none; color: #007BFF; font-size: 18px; }
+        a:hover { color: #0056b3; }
+
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Admin Dashboard</h1>
+        
+        <!-- Manage Users Section -->
+        <section>
+            <h2>Manage Users</h2>
+            <a href="{{ url_for('manage_users') }}">Manage User Accounts</a>
+        </section>
+
+        <!-- Manage Content Section -->
+        <section>
+            <h2>Manage Content</h2>
+            <a href="{{ url_for('manage_recipes') }}">Manage Recipes</a><br><br>
+            <a href="{{ url_for('manage_suppliers') }}">Manage Suppliers</a>
+        </section>
+
+        <!-- Manage System Settings -->
+        <section>
+            <h2>System Settings</h2>
+            <a href="{{ url_for('settings') }}">Configure Global Settings</a>
+        </section>
+
+        <!-- User Role Management -->
+        <section>
+            <h2>User Roles</h2>
+            <a href="{{ url_for('assign_roles') }}">Assign User Roles</a>
+        </section>
+
+        <br>
+        <a href="{{ url_for('home') }}">Back to Home</a>
+    </div>
+</body>
+</html>

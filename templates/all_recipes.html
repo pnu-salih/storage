@@ -5,10 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Recipes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
 </head>
 <body>
     <div class="container">
+        <header>
+            <nav>
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('inventory') }}">Inventory</a>
+                <a href="{{ url_for('recipes') }}">Create Recipes</a>
+                <a href="{{ url_for('all_recipes') }}">Recipes</a>
+                <a href="{{ url_for('supplier_products') }}">Supplier Products</a>
+                <a href="{{ url_for('supplied_products') }}">Supplied Products</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </nav>
+        </header>
         <h1 class="mt-5">All Recipes</h1>
+
+        <div class="mb-3">
+            <a href="{{ url_for('filter_recipes_by_preferences') }}" class="btn btn-secondary">
+                Show Recipes Matching My Preferences
+            </a>
+        </div>
         
         <table class="table table-bordered mt-4">
             <thead>
@@ -20,6 +39,8 @@
                     <th>Ingredients Count</th>
                     <th>Instructions</th>
                     <th>Created By</th>
+                    <th>Image</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,10 +53,23 @@
                     <td>{{ recipe.ingredients_count }}</td>
                     <td>{{ recipe.instructions }}</td>
                     <td>{{ recipe.created_by }}</td>
+                    <td>
+                        {% if recipe.image_name %}
+                            <img src="{{ url_for('static', filename='upload/' + recipe.image_name) }}" alt="{{ recipe.recipe_name }}" style="width: 100px; height: auto;">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form action="{{ url_for('generate_shopping_list') }}" method="post">
+                            <input type="hidden" name="recipe_id" value="{{ recipe.recipe_id }}">
+                            <button type="submit" class="btn btn-primary">Generate Shopping List</button>
+                        </form>
+                    </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="7" class="text-center">No recipes found.</td>
+                    <td colspan="9" class="text-center">No recipes found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
