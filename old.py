@@ -1,5 +1,4 @@
 def init_db():
-    """Initialize the database and create tables with relationships."""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
 
