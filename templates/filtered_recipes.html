@@ -39,11 +39,27 @@
     <header>
         <nav>
             <a href="{{ url_for('home') }}">Home</a>
-            <a href="{{ url_for('inventory') }}">Inventory</a>
-            <a href="{{ url_for('recipes') }}">Create Recipes</a>
-            <a href="{{ url_for('all_recipes') }}">Recipes</a>
-            <a href="{{ url_for('supplier_products') }}">Supplier Products</a>
-            <a href="{{ url_for('supplied_products') }}">Supplied Products</a>
+
+            {% if session.get('role') == 'recipe_currator' %}
+                <a href="{{ url_for('recipes') }}">Create Recipes</a>
+                <a href="{{ url_for('all_recipes') }}">Recipes</a>
+                <a href="{{ url_for('supplied_products') }}">Supplied Products</a>
+            {% elif session.get('role') == 'supplier' %}
+                <a href="{{ url_for('supplier_products') }}">Supplier Products</a>
+                <a href="{{ url_for('supplied_products') }}">Supplied Products</a>
+            {% elif session.get('role') == 'user' %}
+                <a href="{{ url_for('inventory') }}">Inventory</a>
+                <a href="{{ url_for('all_recipes') }}">Recipes</a>
+                <a href="{{ url_for('supplied_products') }}">Supplied Products</a>
+            {% elif session.get('role') == 'admin' %}
+                <a href="{{ url_for('inventory') }}">Inventory</a>
+                <a href="{{ url_for('recipes') }}">Create Recipes</a>
+                <a href="{{ url_for('all_recipes') }}">Recipes</a>
+                <a href="{{ url_for('supplier_products') }}">Supplier Products</a>
+                <a href="{{ url_for('supplied_products') }}">Supplied Products</a>
+                <a href="{{ url_for('admin') }}">Admin Panel</a>
+            {% endif %}
+            
             <a href="{{ url_for('logout') }}">Logout</a>
         </nav>
     </header>
